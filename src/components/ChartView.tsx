@@ -1,44 +1,42 @@
-'use client';
+import {
+	CartesianGrid,
+	Legend,
+	Line,
+	LineChart,
+	ResponsiveContainer,
+	Tooltip,
+	XAxis,
+	YAxis
+} from 'recharts';
 
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
+type Lead = {
+	id: string;
+	value: number;
+};
 
-import { ChartConfig, ChartContainer } from '@/components/ui/chart';
+export function ChartView({ data }: { data: Lead[] }) {
+	const days = data.map((lead, index) => ({
+		day: (index + 1).toString(),
+		lead: lead.toString()
+	}));
 
-const chartData = [
-	{ month: 'January', desktop: 186, mobile: 80 },
-	{ month: 'February', desktop: 305, mobile: 200 },
-	{ month: 'March', desktop: 237, mobile: 120 },
-	{ month: 'April', desktop: 73, mobile: 190 },
-	{ month: 'May', desktop: 209, mobile: 130 },
-	{ month: 'June', desktop: 214, mobile: 140 }
-];
-
-const chartConfig = {
-	desktop: {
-		label: 'Desktop',
-		color: '#2563eb'
-	},
-	mobile: {
-		label: 'Mobile',
-		color: '#60a5fa'
-	}
-} satisfies ChartConfig;
-
-export function ChartView() {
 	return (
-		<ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-			<BarChart accessibilityLayer data={chartData}>
-				<CartesianGrid vertical={false} />
-				<XAxis
-					dataKey="month"
-					tickLine={false}
-					tickMargin={10}
-					axisLine={false}
-					tickFormatter={(value) => value.slice(0, 3)}
-				/>
-				<Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-				<Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-			</BarChart>
-		</ChartContainer>
+		<div className="p-4 rounded-lg shadow mt-2">
+			<ResponsiveContainer width="100%" height={400}>
+				<LineChart data={days}>
+					<CartesianGrid strokeDasharray="3 3" />
+					<XAxis dataKey="day" />
+					<YAxis domain={[0, 500]} />
+					<Tooltip />
+					<Legend />
+					<Line
+						type="monotone"
+						dataKey="lead"
+						stroke="#8884d8"
+						activeDot={{ r: 8 }}
+					/>
+				</LineChart>
+			</ResponsiveContainer>
+		</div>
 	);
 }
